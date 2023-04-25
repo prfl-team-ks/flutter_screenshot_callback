@@ -25,17 +25,14 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 31
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+    compileSdkVersion 33
+    namespace 'com.flutter.moum.screenshot_callback_example'
 
     defaultConfig {
         multiDexEnabled true
         applicationId "com.flutter.moum.screenshot_callback_example"
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -46,6 +43,10 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'com.flutter.moum.screenshot_callback_example'
+    lint {
+        disable 'InvalidPackage'
+    }
 }
 
 flutter {
@@ -54,7 +55,7 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.android.support:multidex:1.0.3'
 }
