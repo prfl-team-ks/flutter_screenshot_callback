@@ -119,15 +119,15 @@ public class ScreenshotCallbackPlugin implements FlutterPlugin, MethodCallHandle
             case "request_permission":
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                     if (ContextCompat.checkSelfPermission(activityPluginBinding.getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
+                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 3009);
                     }
                 } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                     if (ContextCompat.checkSelfPermission(activityPluginBinding.getActivity(), Manifest.permission.MANAGE_MEDIA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.MANAGE_MEDIA}, 101);
+                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.MANAGE_MEDIA}, 3009);
                     }
                 } else {
                     if (ContextCompat.checkSelfPermission(activityPluginBinding.getActivity(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 101);
+                        ActivityCompat.requestPermissions(activityPluginBinding.getActivity(), new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 3009);
                     }
 
                 }
