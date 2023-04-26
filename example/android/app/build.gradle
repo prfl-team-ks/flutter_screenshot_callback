@@ -31,7 +31,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         applicationId "com.flutter.moum.screenshot_callback_example"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
