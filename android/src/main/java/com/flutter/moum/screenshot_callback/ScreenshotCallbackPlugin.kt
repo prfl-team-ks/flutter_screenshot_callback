@@ -88,7 +88,7 @@ class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler , ActivityAwar
             }
              "request_permission"->
              {
-               if(Build.VERSION.SDK_INT < 31) {
+               if(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                    if (ContextCompat.checkSelfPermission(
                            activityPluginBinding!!.activity,
                            Manifest.permission.READ_EXTERNAL_STORAGE
