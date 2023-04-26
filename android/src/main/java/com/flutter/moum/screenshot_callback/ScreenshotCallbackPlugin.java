@@ -131,7 +131,7 @@ public class ScreenshotCallbackPlugin implements FlutterPlugin, MethodCallHandle
                     }
 
                 }
-                result.success("dispose");
+                result.success("request_permission");
                 break;
             case "dispose":
                 stopListen();
