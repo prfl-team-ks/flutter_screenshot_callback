@@ -15,19 +15,14 @@ class ScreenshotCallback {
   }
 
   /// Initializes screenshot callback plugin.
-  Future<void> initialize([bool requestPermission = true]) async {
+  Future<void> initialize() async {
     _channel.setMethodCallHandler(_handleMethod);
-    if (requestPermission && Platform.isAndroid) storagePermission();
     await _channel.invokeMethod('initialize');
   }
 
   /// Add void callback.
   void addListener(VoidCallback callback) {
     onCallbacks.add(callback);
-  }
-
-  Future<void> storagePermission() {
-    return _channel.invokeMethod("request_permission");
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {
