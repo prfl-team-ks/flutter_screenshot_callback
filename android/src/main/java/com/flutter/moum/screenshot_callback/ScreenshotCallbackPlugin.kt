@@ -99,18 +99,28 @@ class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler , ActivityAwar
                            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 101
                        );
                    }
-               }
-                else {
+               }else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU){
+                   if (ContextCompat.checkSelfPermission(
+                       activityPluginBinding!!.activity,
+                       Manifest.permission.MANAGE_MEDIA
+                   ) != PackageManager.PERMISSION_GRANTED
+               ) {
+                   ActivityCompat.requestPermissions(
+                       activityPluginBinding!!.activity,
+                       arrayOf(Manifest.permission.MANAGE_MEDIA), 101
+                   )
+               };}
+                else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                    if (ContextCompat.checkSelfPermission(
                            activityPluginBinding!!.activity,
                            Manifest.permission.READ_MEDIA_IMAGES
                        ) != PackageManager.PERMISSION_GRANTED
                    ) {
-                       ActivityCompat.requestPermissions(
-                           activityPluginBinding!!.activity,
-                           arrayOf(Manifest.permission.READ_MEDIA_IMAGES), 101
-                       );
-                   }
+                           ActivityCompat.requestPermissions(
+                               activityPluginBinding!!.activity,
+                               arrayOf(Manifest.permission.READ_MEDIA_IMAGES), 101
+                           )
+                       };
                }
              }
             else -> {
