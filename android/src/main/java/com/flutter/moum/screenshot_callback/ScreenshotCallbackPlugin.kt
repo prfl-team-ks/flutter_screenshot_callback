@@ -1,7 +1,9 @@
 package com.flutter.moum.screenshot_callback
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.database.Cursor
 import android.graphics.Point
@@ -14,20 +16,26 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import java.util.Locale
 
-class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler {
+class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler , ActivityAware {
     private var channel: MethodChannel? = null
     private val TAG = "ScreenshotCallback"
     private var context: Context? = null
     private var startListenTime: Long = 0
     private var screenshotTime: Long = 0
     private var notifyForDescendants = false
+
+    private var activityPluginBinding: ActivityPluginBinding? = null
 
     // 运行在 UI 线程的 Handler, 用于运行监听器回调
     private val uiHandler = Handler(Looper.getMainLooper())
@@ -44,10 +52,10 @@ class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler {
     private val realScreenSize: Point
         get() {
             val screenSize = Point()
-            val windowManager = context!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val displayMetrics = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(displayMetrics)
 
+            val windowManager = context!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
             screenSize[displayMetrics.widthPixels] = displayMetrics.heightPixels
             return screenSize
         }
@@ -69,14 +77,45 @@ class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler {
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        if (call.method == "initialize") {
-            startListen()
-            result.success("initialize")
-        } else if (call.method == "dispose") {
-            stopListen()
-            result.success("dispose")
-        } else {
-            result.notImplemented()
+        when (call.method) {
+            "initialize" -> {
+                startListen()
+                result.success("initialize")
+            }
+            "dispose" -> {
+                stopListen()
+                result.success("dispose")
+            }
+             "request_permission"->
+             {
+               if(Build.VERSION.SDK_INT < 31) {
+                   if (ContextCompat.checkSelfPermission(
+                           activityPluginBinding!!.activity,
+                           Manifest.permission.READ_EXTERNAL_STORAGE
+                       ) != PackageManager.PERMISSION_GRANTED
+                   ) {
+                       ActivityCompat.requestPermissions(
+                           activityPluginBinding!!.activity,
+                           arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 101
+                       );
+                   }
+               }
+                else {
+                   if (ContextCompat.checkSelfPermission(
+                           activityPluginBinding!!.activity,
+                           Manifest.permission.READ_MEDIA_IMAGES
+                       ) != PackageManager.PERMISSION_GRANTED
+                   ) {
+                       ActivityCompat.requestPermissions(
+                           activityPluginBinding!!.activity,
+                           arrayOf(Manifest.permission.READ_MEDIA_IMAGES), 101
+                       );
+                   }
+               }
+             }
+            else -> {
+                result.notImplemented()
+            }
         }
     }
 
@@ -343,5 +382,21 @@ class ScreenshotCallbackPlugin : FlutterPlugin, MethodCallHandler {
 
         // 已回调过的路径
         private val sHasCallbackPaths: MutableList<String> = ArrayList()
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activityPluginBinding = binding;
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDetachedFromActivity() {
+        TODO("Not yet implemented")
     }
 }
