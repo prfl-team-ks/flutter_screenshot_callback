@@ -28,10 +28,14 @@ android {
     compileSdkVersion 33
     namespace 'com.flutter.moum.screenshot_callback_example'
 
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
     defaultConfig {
         multiDexEnabled true
         applicationId "com.flutter.moum.screenshot_callback_example"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
